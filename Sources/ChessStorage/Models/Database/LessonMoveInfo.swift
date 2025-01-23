@@ -7,6 +7,7 @@
 
 public struct LessonMoveInfo: Codable {
     public let id: String?
+    public let lessonID: String
     public let updateDate: Double
     public let moveNumber: Int
     public let userColor: PieceColor
@@ -24,12 +25,13 @@ public struct LessonMoveInfo: Codable {
     public let fenAfterUserMove: String
     public let commentOnIncorrectMove: String?
     
-    public init(id: String? = nil, updateDate: Double, moveNumber: Int, userColor: PieceColor,
+    public init(id: String? = nil, lessonID: String, updateDate: Double, moveNumber: Int, userColor: PieceColor,
                 fenSimpleBeforeComputerMove: String?, fenBeforeComputerMove: String?, computerMove: String?,
                 fenSimpleBeforeUserMove: String, fenBeforeUserMove: String, commentBeforeUserMove: String?,
                 commentAfterUserMove: String?, correctUserMove: String, fenSimpleAfterUserMove: String,
                 fenAfterUserMove: String, commentOnIncorrectMove: String?) {
         self.id = id
+        self.lessonID = lessonID
         self.updateDate = updateDate
         self.moveNumber = moveNumber
         self.userColor = userColor

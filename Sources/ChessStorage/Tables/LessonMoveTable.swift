@@ -109,6 +109,7 @@ extension LessonMoveTable {
             ))
         }
         return LessonMoveInfo(id: moveIdentifier,
+                              lessonID: move.lessonID,
                               updateDate: move.updateDate,
                               moveNumber: move.moveNumber,
                               userColor: move.userColor,
@@ -144,6 +145,7 @@ extension LessonMoveTable {
 
     private static func lessonMoveInfo(from row: Row) -> LessonMoveInfo {
         LessonMoveInfo(id: row[LessonMoveTable.identifier],
+                       lessonID: row[LessonMoveTable.lessonIdentifier],
                        updateDate: row[LessonMoveTable.updateDate],
                        moveNumber: row[LessonMoveTable.moveNumber],
                        userColor: PieceColor(rawValue: row[LessonMoveTable.userColor])!,

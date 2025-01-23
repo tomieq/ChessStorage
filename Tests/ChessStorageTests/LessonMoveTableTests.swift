@@ -13,6 +13,7 @@ import SQLite
 struct LessonMoveTableTests {
     var sampleMove: LessonMoveInfo {
         LessonMoveInfo(id: nil,
+                       lessonID: "hakgefajehf",
                        updateDate: 876,
                        moveNumber: 3,
                        userColor: .white,
