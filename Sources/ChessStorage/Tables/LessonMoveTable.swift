@@ -129,21 +129,34 @@ extension LessonMoveTable {
         guard let row = try db.pluck(LessonMoveTable.table.filter(LessonMoveTable.identifier == id)) else {
             return nil
         }
-        return LessonMoveInfo(id: row[LessonMoveTable.identifier],
-                              updateDate: row[LessonMoveTable.updateDate],
-                              moveNumber: row[LessonMoveTable.moveNumber],
-                              userColor: PieceColor(rawValue: row[LessonMoveTable.userColor])!,
-                              fenSimpleBeforeComputerMove: row[LessonMoveTable.fenSimpleBeforeComputerMove],
-                              fenBeforeComputerMove: row[LessonMoveTable.fenBeforeComputerMove],
-                              computerMove: row[LessonMoveTable.computerMove],
-                              fenSimpleBeforeUserMove: row[LessonMoveTable.fenSimpleBeforeUserMove],
-                              fenBeforeUserMove: row[LessonMoveTable.fenBeforeUserMove],
-                              commentBeforeUserMove: row[LessonMoveTable.commentBeforeUserMove],
-                              commentAfterUserMove: row[LessonMoveTable.commentAfterUserMove],
-                              correctUserMove: row[LessonMoveTable.correctUserMove],
-                              fenSimpleAfterUserMove: row[LessonMoveTable.fenSimpleAfterUserMove],
-                              fenAfterUserMove: row[LessonMoveTable.fenAfterUserMove],
-                              commentOnIncorrectMove: row[LessonMoveTable.commentOnIncorrectMove])
+        return lessonMoveInfo(from: row)
+    }
+    
+    static func get(db: Connection, lessonID: String) throws -> [LessonMoveInfo] {
+        var result: [LessonMoveInfo] = []
+        for row in try db.prepare(LessonMoveTable.table
+            .filter(LessonMoveTable.lessonIdentifier == lessonID)
+            .order(LessonMoveTable.moveNumber.asc)) {
+            result.append(lessonMoveInfo(from: row))
+        }
+        return result
+    }
 
+    private static func lessonMoveInfo(from row: Row) -> LessonMoveInfo {
+        LessonMoveInfo(id: row[LessonMoveTable.identifier],
+                       updateDate: row[LessonMoveTable.updateDate],
+                       moveNumber: row[LessonMoveTable.moveNumber],
+                       userColor: PieceColor(rawValue: row[LessonMoveTable.userColor])!,
+                       fenSimpleBeforeComputerMove: row[LessonMoveTable.fenSimpleBeforeComputerMove],
+                       fenBeforeComputerMove: row[LessonMoveTable.fenBeforeComputerMove],
+                       computerMove: row[LessonMoveTable.computerMove],
+                       fenSimpleBeforeUserMove: row[LessonMoveTable.fenSimpleBeforeUserMove],
+                       fenBeforeUserMove: row[LessonMoveTable.fenBeforeUserMove],
+                       commentBeforeUserMove: row[LessonMoveTable.commentBeforeUserMove],
+                       commentAfterUserMove: row[LessonMoveTable.commentAfterUserMove],
+                       correctUserMove: row[LessonMoveTable.correctUserMove],
+                       fenSimpleAfterUserMove: row[LessonMoveTable.fenSimpleAfterUserMove],
+                       fenAfterUserMove: row[LessonMoveTable.fenAfterUserMove],
+                       commentOnIncorrectMove: row[LessonMoveTable.commentOnIncorrectMove])
     }
 }

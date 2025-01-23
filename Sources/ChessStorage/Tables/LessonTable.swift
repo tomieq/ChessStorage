@@ -11,6 +11,7 @@ enum LessonTable {
     static let name = "lessons"
     static let table = Table(Self.name)
     static let identifier = SQLite.Expression<String>("identifier")
+    static let groupIdentifier = SQLite.Expression<String>("groupIdentifier")
     static let sequence = SQLite.Expression<Int>("sequence")
     static let updateDate = SQLite.Expression<Double>("updateDate")
     static let lessonName = SQLite.Expression<String>("name")
@@ -22,6 +23,7 @@ extension LessonTable {
     static func createTable(db: Connection) throws {
         try db.run(LessonTable.table.create(ifNotExists: true) { t in
             t.column(LessonTable.identifier)
+            t.column(LessonTable.groupIdentifier)
             t.column(LessonTable.sequence)
             t.column(LessonTable.updateDate)
             t.column(LessonTable.lessonName)
@@ -29,6 +31,7 @@ extension LessonTable {
             t.column(LessonTable.type)
         })
         try db.run(LessonTable.table.createIndex(LessonTable.identifier, ifNotExists: true))
+        try db.run(LessonTable.table.createIndex(LessonTable.groupIdentifier, ifNotExists: true))
         try db.run(LessonTable.table.createIndex(LessonTable.sequence, ifNotExists: true))
         try db.run(LessonTable.table.createIndex(LessonTable.updateDate, ifNotExists: true))
     }
@@ -44,6 +47,7 @@ extension LessonTable {
            try db.scalar(LessonTable.table.filter(LessonTable.identifier == identifier).count) > 0 {
             lessonIdentifier = identifier
             try db.run(LessonTable.table.filter(LessonTable.identifier == identifier).update(
+                LessonTable.groupIdentifier <- lesson.groupID,
                 LessonTable.sequence <- lesson.sequence,
                 LessonTable.updateDate <- lesson.updateDate,
                 LessonTable.lessonName <- lesson.name,
@@ -54,6 +58,7 @@ extension LessonTable {
             lessonIdentifier = lesson.id ?? UUID().uuidString
             try db.run(LessonTable.table.insert(
                 LessonTable.identifier <- lessonIdentifier,
+                LessonTable.groupIdentifier <- lesson.groupID,
                 LessonTable.sequence <- lesson.sequence,
                 LessonTable.updateDate <- lesson.updateDate,
                 LessonTable.lessonName <- lesson.name,
@@ -62,6 +67,7 @@ extension LessonTable {
             ))
         }
         return LessonInfo(id: lessonIdentifier,
+                          groupID: lesson.groupID,
                           sequence: lesson.sequence,
                           updateDate: lesson.updateDate,
                           name: lesson.name,
@@ -74,6 +80,7 @@ extension LessonTable {
             return nil
         }
         return LessonInfo(id: row[LessonTable.identifier],
+                          groupID: row[LessonTable.groupIdentifier],
                           sequence: row[LessonTable.sequence],
                           updateDate: row[LessonTable.updateDate],
                           name: row[LessonTable.lessonName],

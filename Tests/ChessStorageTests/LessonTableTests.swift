@@ -5,6 +5,7 @@
 //  Created by Tomasz on 23/01/2025.
 //
 
+import Foundation
 import Testing
 import SQLite
 @testable import ChessStorage
@@ -12,6 +13,7 @@ import SQLite
 struct LessonTableTests {
     var sampleLesson: LessonInfo {
         LessonInfo(id: nil,
+                   groupID: UUID().uuidString,
                    sequence: 1,
                    updateDate: 5,
                    name: "first",

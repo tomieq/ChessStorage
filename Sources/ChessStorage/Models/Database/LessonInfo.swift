@@ -7,6 +7,7 @@
 
 public struct LessonInfo: Codable {
     public let id: String?
+    public let groupID: String
     public let sequence: Int
     public let updateDate: Double
     public let name: String
