@@ -71,7 +71,7 @@ extension LessonMoveTable {
            try db.scalar(LessonMoveTable.table.filter(LessonMoveTable.identifier == identifier).count) > 0 {
             moveIdentifier = identifier
             try db.run(LessonMoveTable.table.filter(LessonMoveTable.identifier == identifier).update(
-                LessonMoveTable.lessonIdentifier <- lessonIdentifier,
+                LessonMoveTable.lessonIdentifier <- move.lessonID,
                 LessonMoveTable.updateDate <- move.updateDate,
                 LessonMoveTable.moveNumber <- move.moveNumber,
                 LessonMoveTable.userColor <- move.userColor.rawValue,
@@ -91,7 +91,7 @@ extension LessonMoveTable {
             moveIdentifier = move.id ?? UUID().uuidString
             try db.run(LessonMoveTable.table.insert(
                 LessonMoveTable.identifier <- moveIdentifier,
-                LessonMoveTable.lessonIdentifier <- lessonIdentifier,
+                LessonMoveTable.lessonIdentifier <- move.lessonID,
                 LessonMoveTable.updateDate <- move.updateDate,
                 LessonMoveTable.moveNumber <- move.moveNumber,
                 LessonMoveTable.userColor <- move.userColor.rawValue,
