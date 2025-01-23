@@ -37,9 +37,12 @@ extension LessonTable {
         try db.scalar(LessonTable.table.count)
     }
     
-    static func store(db: Connection, lesson: LessonInfo) throws {
+    @discardableResult
+    static func store(db: Connection, lesson: LessonInfo) throws -> LessonInfo {
+        var lessonIdentifier = ""
         if let identifier = lesson.id,
            try db.scalar(LessonTable.table.filter(LessonTable.identifier == identifier).count) > 0 {
+            lessonIdentifier = identifier
             try db.run(LessonTable.table.filter(LessonTable.identifier == identifier).update(
                 LessonTable.sequence <- lesson.sequence,
                 LessonTable.updateDate <- lesson.updateDate,
@@ -48,8 +51,9 @@ extension LessonTable {
                 LessonTable.type <- lesson.type.rawValue
             ))
         } else {
+            lessonIdentifier = lesson.id ?? UUID().uuidString
             try db.run(LessonTable.table.insert(
-                LessonTable.identifier <- lesson.id ?? UUID().uuidString,
+                LessonTable.identifier <- lessonIdentifier,
                 LessonTable.sequence <- lesson.sequence,
                 LessonTable.updateDate <- lesson.updateDate,
                 LessonTable.lessonName <- lesson.name,
@@ -57,6 +61,23 @@ extension LessonTable {
                 LessonTable.type <- lesson.type.rawValue
             ))
         }
-        
+        return LessonInfo(id: lessonIdentifier,
+                          sequence: lesson.sequence,
+                          updateDate: lesson.updateDate,
+                          name: lesson.name,
+                          subname: lesson.subname,
+                          type: lesson.type)
+    }
+    
+    static func get(db: Connection, id: String) throws -> LessonInfo? {
+        guard let row = try db.pluck(LessonTable.table.filter(LessonTable.identifier == id)) else {
+            return nil
+        }
+        return LessonInfo(id: row[LessonTable.identifier],
+                          sequence: row[LessonTable.sequence],
+                          updateDate: row[LessonTable.updateDate],
+                          name: row[LessonTable.lessonName],
+                          subname: row[LessonTable.lessonSubname],
+                          type: LessonType(rawValue: row[LessonTable.type])!)
     }
 }
