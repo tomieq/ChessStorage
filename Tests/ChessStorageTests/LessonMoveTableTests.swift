@@ -11,9 +11,9 @@ import SQLite
 @testable import ChessStorage
 
 struct LessonMoveTableTests {
-    var sampleMove: LessonMoveInfo {
-        LessonMoveInfo(id: nil,
-                       lessonID: "hakgefajehf",
+    var sampleMove: LessonMove {
+        LessonMove(id: UUID().uuidString,
+                       lessonID: UUID().uuidString,
                        updateDate: 876,
                        moveNumber: 3,
                        userColor: .white,
@@ -39,24 +39,8 @@ struct LessonMoveTableTests {
     @Test func storeMove() async throws {
         let db = try Connection(.inMemory)
         try LessonMoveTable.createTable(db: db)
-        let move = sampleMove
-        let stored = try LessonMoveTable.store(db: db, move: move)
-        #expect(try LessonMoveTable.count(db: db) == 1)
-        #expect(stored.updateDate == move.updateDate)
-        #expect(stored.moveNumber == move.moveNumber)
-        #expect(stored.userColor == move.userColor)
-        #expect(stored.fenSimpleBeforeComputerMove == move.fenSimpleBeforeComputerMove)
-        #expect(stored.fenBeforeComputerMove == move.fenBeforeComputerMove)
-        #expect(stored.computerMove == move.computerMove)
-        #expect(stored.fenSimpleBeforeUserMove == move.fenSimpleBeforeUserMove)
-        #expect(stored.fenBeforeUserMove == move.fenBeforeUserMove)
-        #expect(stored.commentBeforeUserMove == move.commentBeforeUserMove)
-        #expect(stored.commentAfterUserMove == move.commentAfterUserMove)
-        #expect(stored.correctUserMove == move.correctUserMove)
-        #expect(stored.fenSimpleAfterUserMove == move.fenSimpleAfterUserMove)
-        #expect(stored.fenAfterUserMove == move.fenAfterUserMove)
-        #expect(stored.commentOnIncorrectMove == move.commentOnIncorrectMove)
-        try LessonMoveTable.store(db: db, move: move)
+        try LessonMoveTable.store(db: db, move: sampleMove)
+        try LessonMoveTable.store(db: db, move: sampleMove)
         #expect(try LessonMoveTable.count(db: db) == 2)
     }
     
@@ -64,8 +48,8 @@ struct LessonMoveTableTests {
         let db = try Connection(.inMemory)
         try LessonMoveTable.createTable(db: db)
         let move = sampleMove
-        let stored = try LessonMoveTable.store(db: db, move: move)
-        let restored = try LessonMoveTable.get(db: db, id: stored.id!)
+        try LessonMoveTable.store(db: db, move: move)
+        let restored = try LessonMoveTable.get(db: db, id: move.id)
         #expect(restored?.updateDate == move.updateDate)
         #expect(restored?.moveNumber == move.moveNumber)
         #expect(restored?.userColor == move.userColor)
@@ -80,18 +64,18 @@ struct LessonMoveTableTests {
         #expect(restored?.fenSimpleAfterUserMove == move.fenSimpleAfterUserMove)
         #expect(restored?.fenAfterUserMove == move.fenAfterUserMove)
         #expect(restored?.commentOnIncorrectMove == move.commentOnIncorrectMove)
-        #expect(restored?.id == stored.id)
+        #expect(restored?.id == move.id)
     }
 
     @Test func updateMove() async throws {
         let db = try Connection(.inMemory)
         try LessonMoveTable.createTable(db: db)
         let move = sampleMove
-        let stored = try LessonMoveTable.store(db: db, move: move)
+        try LessonMoveTable.store(db: db, move: move)
         #expect(try LessonMoveTable.count(db: db) == 1)
-        try LessonMoveTable.store(db: db, move: stored)
+        try LessonMoveTable.store(db: db, move: move)
         #expect(try LessonMoveTable.count(db: db) == 1)
-        let restored = try LessonMoveTable.get(db: db, id: stored.id!)
+        let restored = try LessonMoveTable.get(db: db, id: move.id)
         #expect(restored?.updateDate == move.updateDate)
         #expect(restored?.moveNumber == move.moveNumber)
         #expect(restored?.userColor == move.userColor)
@@ -106,6 +90,6 @@ struct LessonMoveTableTests {
         #expect(restored?.fenSimpleAfterUserMove == move.fenSimpleAfterUserMove)
         #expect(restored?.fenAfterUserMove == move.fenAfterUserMove)
         #expect(restored?.commentOnIncorrectMove == move.commentOnIncorrectMove)
-        #expect(restored?.id == stored.id)
+        #expect(restored?.id == move.id)
     }
 }

@@ -4,25 +4,27 @@
 //
 //  Created by Tomasz on 23/01/2025.
 //
+import Foundation
 
-public struct LessonMoveInfo: Codable {
-    public let id: String?
+public struct LessonMove: Codable {
+    public let id: String
     public let lessonID: String
     public let updateDate: Double
-    public let moveNumber: Int
-    public let userColor: PieceColor
+    public let moveNumber: Int // next move number within lesson
+    public let userColor: PieceColor // user's color that moves
     
-    public let fenSimpleBeforeComputerMove: String?
+    // automatic move preceding user's move
+    public let fenSimpleBeforeComputerMove: String? // fen fingerprint
     public let fenBeforeComputerMove: String?
     public let computerMove: String?
     
-    public let fenSimpleBeforeUserMove: String
-    public let fenBeforeUserMove: String
-    public let commentBeforeUserMove: String?
-    public let commentAfterUserMove: String?
-    public let correctUserMove: String
-    public let fenSimpleAfterUserMove: String
-    public let fenAfterUserMove: String
+    public let fenSimpleBeforeUserMove: String // fen fingerprint
+    public let fenBeforeUserMove: String // to be able to setup pieces just for this move
+    public let commentBeforeUserMove: String? // shown to user during learning
+    public let commentAfterUserMove: String? // shown to user during learning
+    public let correctUserMove: String // correct answer
+    public let fenSimpleAfterUserMove: String // fen fingerprint
+    public let fenAfterUserMove: String // to be able to setup pieces just after this move
     public let commentOnIncorrectMove: String?
     
     public init(id: String? = nil, lessonID: String, updateDate: Double, moveNumber: Int, userColor: PieceColor,
@@ -30,7 +32,7 @@ public struct LessonMoveInfo: Codable {
                 fenSimpleBeforeUserMove: String, fenBeforeUserMove: String, commentBeforeUserMove: String?,
                 commentAfterUserMove: String?, correctUserMove: String, fenSimpleAfterUserMove: String,
                 fenAfterUserMove: String, commentOnIncorrectMove: String?) {
-        self.id = id
+        self.id = id ?? UUID().uuidString
         self.lessonID = lessonID
         self.updateDate = updateDate
         self.moveNumber = moveNumber

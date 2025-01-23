@@ -65,11 +65,8 @@ extension LessonMoveTable {
     }
     
     @discardableResult
-    static func store(db: Connection, move: LessonMoveInfo) throws -> LessonMoveInfo {
-        var moveIdentifier = ""
-        if let identifier = move.id,
-           try db.scalar(LessonMoveTable.table.filter(LessonMoveTable.identifier == identifier).count) > 0 {
-            moveIdentifier = identifier
+    static func store(db: Connection, move: LessonMove) throws {
+        if try db.scalar(LessonMoveTable.table.filter(LessonMoveTable.identifier == move.id).count) > 0 {
             try db.run(LessonMoveTable.table.filter(LessonMoveTable.identifier == identifier).update(
                 LessonMoveTable.lessonIdentifier <- move.lessonID,
                 LessonMoveTable.updateDate <- move.updateDate,
@@ -88,9 +85,8 @@ extension LessonMoveTable {
                 LessonMoveTable.commentOnIncorrectMove <- move.commentOnIncorrectMove
             ))
         } else {
-            moveIdentifier = move.id ?? UUID().uuidString
             try db.run(LessonMoveTable.table.insert(
-                LessonMoveTable.identifier <- moveIdentifier,
+                LessonMoveTable.identifier <- move.id,
                 LessonMoveTable.lessonIdentifier <- move.lessonID,
                 LessonMoveTable.updateDate <- move.updateDate,
                 LessonMoveTable.moveNumber <- move.moveNumber,
@@ -108,33 +104,17 @@ extension LessonMoveTable {
                 LessonMoveTable.commentOnIncorrectMove <- move.commentOnIncorrectMove
             ))
         }
-        return LessonMoveInfo(id: moveIdentifier,
-                              lessonID: move.lessonID,
-                              updateDate: move.updateDate,
-                              moveNumber: move.moveNumber,
-                              userColor: move.userColor,
-                              fenSimpleBeforeComputerMove: move.fenSimpleBeforeComputerMove,
-                              fenBeforeComputerMove: move.fenBeforeComputerMove,
-                              computerMove: move.computerMove,
-                              fenSimpleBeforeUserMove: move.fenSimpleBeforeUserMove,
-                              fenBeforeUserMove: move.fenBeforeUserMove,
-                              commentBeforeUserMove: move.commentBeforeUserMove,
-                              commentAfterUserMove: move.commentAfterUserMove,
-                              correctUserMove: move.correctUserMove,
-                              fenSimpleAfterUserMove: move.fenSimpleAfterUserMove,
-                              fenAfterUserMove: move.fenAfterUserMove,
-                              commentOnIncorrectMove: move.commentOnIncorrectMove)
     }
     
-    static func get(db: Connection, id: String) throws -> LessonMoveInfo? {
+    static func get(db: Connection, id: String) throws -> LessonMove? {
         guard let row = try db.pluck(LessonMoveTable.table.filter(LessonMoveTable.identifier == id)) else {
             return nil
         }
         return lessonMoveInfo(from: row)
     }
     
-    static func get(db: Connection, lessonID: String) throws -> [LessonMoveInfo] {
-        var result: [LessonMoveInfo] = []
+    static func get(db: Connection, lessonID: String) throws -> [LessonMove] {
+        var result: [LessonMove] = []
         for row in try db.prepare(LessonMoveTable.table
             .filter(LessonMoveTable.lessonIdentifier == lessonID)
             .order(LessonMoveTable.moveNumber.asc)) {
@@ -143,8 +123,8 @@ extension LessonMoveTable {
         return result
     }
 
-    private static func lessonMoveInfo(from row: Row) -> LessonMoveInfo {
-        LessonMoveInfo(id: row[LessonMoveTable.identifier],
+    private static func lessonMoveInfo(from row: Row) -> LessonMove {
+        LessonMove(id: row[LessonMoveTable.identifier],
                        lessonID: row[LessonMoveTable.lessonIdentifier],
                        updateDate: row[LessonMoveTable.updateDate],
                        moveNumber: row[LessonMoveTable.moveNumber],

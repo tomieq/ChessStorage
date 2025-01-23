@@ -27,13 +27,9 @@ struct LessonGroupTableTests {
     @Test func storeGroup() async throws {
         let db = try Connection(.inMemory)
         try LessonGroupTable.createTable(db: db)
-        let group = sampleGroup
-        let stored = try LessonGroupTable.store(db: db, group: group)
+        try LessonGroupTable.store(db: db, group: sampleGroup)
         #expect(try LessonGroupTable.count(db: db) == 1)
-        #expect(stored.name == group.name)
-        #expect(stored.sequence == group.sequence)
-        #expect(stored.updateDate == group.updateDate)
-        try LessonGroupTable.store(db: db, group: group)
+        try LessonGroupTable.store(db: db, group: sampleGroup)
         #expect(try LessonGroupTable.count(db: db) == 2)
     }
     
@@ -41,21 +37,21 @@ struct LessonGroupTableTests {
         let db = try Connection(.inMemory)
         try LessonGroupTable.createTable(db: db)
         let group = sampleGroup
-        let stored = try LessonGroupTable.store(db: db, group: group)
-        let restored = try LessonGroupTable.get(db: db, id: stored.id!)
+        try LessonGroupTable.store(db: db, group: group)
+        let restored = try LessonGroupTable.get(db: db, id: group.id)
         #expect(restored?.name == group.name)
         #expect(restored?.sequence == group.sequence)
         #expect(restored?.updateDate == group.updateDate)
-        #expect(restored?.id == stored.id)
+        #expect(restored?.id == group.id)
     }
     
     @Test func updateGroup() async throws {
         let db = try Connection(.inMemory)
         try LessonGroupTable.createTable(db: db)
         let group = sampleGroup
-        let stored = try LessonGroupTable.store(db: db, group: group)
+        try LessonGroupTable.store(db: db, group: group)
         #expect(try LessonGroupTable.count(db: db) == 1)
-        try LessonGroupTable.store(db: db, group: stored)
+        try LessonGroupTable.store(db: db, group: group)
         #expect(try LessonGroupTable.count(db: db) == 1)
     }
 }

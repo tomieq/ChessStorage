@@ -40,24 +40,20 @@ extension LessonTable {
         try db.scalar(LessonTable.table.count)
     }
     
-    @discardableResult
-    static func store(db: Connection, lesson: LessonInfo) throws -> LessonInfo {
-        var lessonIdentifier = ""
-        if let identifier = lesson.id,
-           try db.scalar(LessonTable.table.filter(LessonTable.identifier == identifier).count) > 0 {
-            lessonIdentifier = identifier
-            try db.run(LessonTable.table.filter(LessonTable.identifier == identifier).update(
-                LessonTable.groupIdentifier <- lesson.groupID,
-                LessonTable.sequence <- lesson.sequence,
-                LessonTable.updateDate <- lesson.updateDate,
-                LessonTable.lessonName <- lesson.name,
-                LessonTable.lessonSubname <- lesson.subname,
-                LessonTable.type <- lesson.type.rawValue
-            ))
+    static func store(db: Connection, lesson: Lesson) throws {
+        if try db.scalar(LessonTable.table.filter(LessonTable.identifier == lesson.id).count) > 0 {
+            try db.run(LessonTable.table.filter(LessonTable.identifier == lesson.id)
+                .update(
+                    LessonTable.groupIdentifier <- lesson.groupID,
+                    LessonTable.sequence <- lesson.sequence,
+                    LessonTable.updateDate <- lesson.updateDate,
+                    LessonTable.lessonName <- lesson.name,
+                    LessonTable.lessonSubname <- lesson.subname,
+                    LessonTable.type <- lesson.type.rawValue
+                ))
         } else {
-            lessonIdentifier = lesson.id ?? UUID().uuidString
             try db.run(LessonTable.table.insert(
-                LessonTable.identifier <- lessonIdentifier,
+                LessonTable.identifier <- lesson.id,
                 LessonTable.groupIdentifier <- lesson.groupID,
                 LessonTable.sequence <- lesson.sequence,
                 LessonTable.updateDate <- lesson.updateDate,
@@ -66,24 +62,17 @@ extension LessonTable {
                 LessonTable.type <- lesson.type.rawValue
             ))
         }
-        return LessonInfo(id: lessonIdentifier,
-                          groupID: lesson.groupID,
-                          sequence: lesson.sequence,
-                          updateDate: lesson.updateDate,
-                          name: lesson.name,
-                          subname: lesson.subname,
-                          type: lesson.type)
     }
     
-    static func get(db: Connection, id: String) throws -> LessonInfo? {
+    static func get(db: Connection, id: String) throws -> Lesson? {
         guard let row = try db.pluck(LessonTable.table.filter(LessonTable.identifier == id)) else {
             return nil
         }
         return lesson(from: row)
     }
     
-    static func get(db: Connection, groupID: String) throws -> [LessonInfo] {
-        var result: [LessonInfo] = []
+    static func get(db: Connection, groupID: String) throws -> [Lesson] {
+        var result: [Lesson] = []
         for row in try db.prepare(LessonTable.table
             .filter(LessonTable.groupIdentifier == groupID)
             .order(LessonTable.sequence)) {
@@ -92,8 +81,8 @@ extension LessonTable {
         return result
     }
     
-    private static func lesson(from row: Row) -> LessonInfo {
-        LessonInfo(id: row[LessonTable.identifier],
+    private static func lesson(from row: Row) -> Lesson {
+        Lesson(id: row[LessonTable.identifier],
                    groupID: row[LessonTable.groupIdentifier],
                    sequence: row[LessonTable.sequence],
                    updateDate: row[LessonTable.updateDate],

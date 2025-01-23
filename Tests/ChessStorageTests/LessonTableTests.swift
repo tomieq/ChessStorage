@@ -11,14 +11,14 @@ import SQLite
 @testable import ChessStorage
 
 struct LessonTableTests {
-    var sampleLesson: LessonInfo {
-        LessonInfo(id: nil,
-                   groupID: UUID().uuidString,
-                   sequence: 1,
-                   updateDate: 5,
-                   name: "first",
-                   subname: "test",
-                   type: .opening)
+    var sampleLesson: Lesson {
+        Lesson(id: UUID().uuidString,
+               groupID: UUID().uuidString,
+               sequence: 1,
+               updateDate: 5,
+               name: UUID().uuidString,
+               subname: UUID().uuidString,
+               type: .opening)
     }
 
     @Test func emptyDatabase() async throws {
@@ -30,13 +30,7 @@ struct LessonTableTests {
     @Test func storeLesson() async throws {
         let db = try Connection(.inMemory)
         try LessonTable.createTable(db: db)
-        let stored = try LessonTable.store(db: db, lesson: sampleLesson)
-        #expect(try LessonTable.count(db: db) == 1)
-        #expect(stored.name == sampleLesson.name)
-        #expect(stored.subname == sampleLesson.subname)
-        #expect(stored.type == sampleLesson.type)
-        #expect(stored.sequence == sampleLesson.sequence)
-        #expect(stored.updateDate == sampleLesson.updateDate)
+        try LessonTable.store(db: db, lesson: sampleLesson)
         try LessonTable.store(db: db, lesson: sampleLesson)
         #expect(try LessonTable.count(db: db) == 2)
     }
@@ -44,22 +38,24 @@ struct LessonTableTests {
     @Test func getLesson() async throws {
         let db = try Connection(.inMemory)
         try LessonTable.createTable(db: db)
-        let stored = try LessonTable.store(db: db, lesson: sampleLesson)
-        let restored = try LessonTable.get(db: db, id: stored.id!)
-        #expect(restored?.name == sampleLesson.name)
-        #expect(restored?.subname == sampleLesson.subname)
-        #expect(restored?.type == sampleLesson.type)
-        #expect(restored?.sequence == sampleLesson.sequence)
-        #expect(restored?.updateDate == sampleLesson.updateDate)
-        #expect(restored?.id == stored.id)
+        let lesson = sampleLesson
+        try LessonTable.store(db: db, lesson: lesson)
+        let restored = try LessonTable.get(db: db, id: lesson.id)
+        #expect(restored?.name == lesson.name)
+        #expect(restored?.subname == lesson.subname)
+        #expect(restored?.type == lesson.type)
+        #expect(restored?.sequence == lesson.sequence)
+        #expect(restored?.updateDate == lesson.updateDate)
+        #expect(restored?.id == lesson.id)
     }
 
     @Test func updateLesson() async throws {
         let db = try Connection(.inMemory)
         try LessonTable.createTable(db: db)
-        let stored = try LessonTable.store(db: db, lesson: sampleLesson)
+        let lesson = sampleLesson
+        try LessonTable.store(db: db, lesson: lesson)
         #expect(try LessonTable.count(db: db) == 1)
-        try LessonTable.store(db: db, lesson: stored)
+        try LessonTable.store(db: db, lesson: lesson)
         #expect(try LessonTable.count(db: db) == 1)
     }
 }

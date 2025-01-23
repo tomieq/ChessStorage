@@ -33,30 +33,21 @@ extension LessonGroupTable {
         try db.scalar(LessonGroupTable.table.count)
     }
     
-    @discardableResult
-    static func store(db: Connection, group: LessonGroup) throws -> LessonGroup {
-        var groupIdentifier = ""
-        if let identifier = group.id,
-           try db.scalar(LessonGroupTable.table.filter(LessonGroupTable.identifier == identifier).count) > 0 {
-            groupIdentifier = identifier
-            try db.run(LessonGroupTable.table.filter(LessonGroupTable.identifier == identifier).update(
+    static func store(db: Connection, group: LessonGroup) throws {
+        if try db.scalar(LessonGroupTable.table.filter(LessonGroupTable.identifier == group.id).count) > 0 {
+            try db.run(LessonGroupTable.table.filter(LessonGroupTable.identifier == group.id).update(
                 LessonGroupTable.sequence <- group.sequence,
                 LessonGroupTable.updateDate <- group.updateDate,
                 LessonGroupTable.groupName <- group.name
             ))
         } else {
-            groupIdentifier = group.id ?? UUID().uuidString
             try db.run(LessonGroupTable.table.insert(
-                LessonGroupTable.identifier <- groupIdentifier,
+                LessonGroupTable.identifier <- group.id,
                 LessonGroupTable.sequence <- group.sequence,
                 LessonGroupTable.updateDate <- group.updateDate,
                 LessonGroupTable.groupName <- group.name
             ))
         }
-        return LessonGroup(id: groupIdentifier,
-                           sequence: group.sequence,
-                           updateDate: group.updateDate,
-                           name: group.name)
     }
     
     static func get(db: Connection, id: String) throws -> LessonGroup? {
