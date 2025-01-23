@@ -10,4 +10,11 @@ public struct LessonGroup: Codable {
     public let sequence: Int
     public let updateDate: Double
     public let name: String
+    
+    public init(id: String? = nil, sequence: Int, updateDate: Double, name: String) {
+        self.id = id
+        self.sequence = sequence
+        self.updateDate = updateDate
+        self.name = name
+    }
 }

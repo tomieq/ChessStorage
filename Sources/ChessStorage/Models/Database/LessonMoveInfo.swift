@@ -23,4 +23,26 @@ public struct LessonMoveInfo: Codable {
     public let fenSimpleAfterUserMove: String
     public let fenAfterUserMove: String
     public let commentOnIncorrectMove: String?
+    
+    public init(id: String? = nil, updateDate: Double, moveNumber: Int, userColor: PieceColor,
+                fenSimpleBeforeComputerMove: String?, fenBeforeComputerMove: String?, computerMove: String?,
+                fenSimpleBeforeUserMove: String, fenBeforeUserMove: String, commentBeforeUserMove: String?,
+                commentAfterUserMove: String?, correctUserMove: String, fenSimpleAfterUserMove: String,
+                fenAfterUserMove: String, commentOnIncorrectMove: String?) {
+        self.id = id
+        self.updateDate = updateDate
+        self.moveNumber = moveNumber
+        self.userColor = userColor
+        self.fenSimpleBeforeComputerMove = fenSimpleBeforeComputerMove
+        self.fenBeforeComputerMove = fenBeforeComputerMove
+        self.computerMove = computerMove
+        self.fenSimpleBeforeUserMove = fenSimpleBeforeUserMove
+        self.fenBeforeUserMove = fenBeforeUserMove
+        self.commentBeforeUserMove = commentBeforeUserMove
+        self.commentAfterUserMove = commentAfterUserMove
+        self.correctUserMove = correctUserMove
+        self.fenSimpleAfterUserMove = fenSimpleAfterUserMove
+        self.fenAfterUserMove = fenAfterUserMove
+        self.commentOnIncorrectMove = commentOnIncorrectMove
+    }
 }
