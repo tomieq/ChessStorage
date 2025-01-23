@@ -79,12 +79,26 @@ extension LessonTable {
         guard let row = try db.pluck(LessonTable.table.filter(LessonTable.identifier == id)) else {
             return nil
         }
-        return LessonInfo(id: row[LessonTable.identifier],
-                          groupID: row[LessonTable.groupIdentifier],
-                          sequence: row[LessonTable.sequence],
-                          updateDate: row[LessonTable.updateDate],
-                          name: row[LessonTable.lessonName],
-                          subname: row[LessonTable.lessonSubname],
-                          type: LessonType(rawValue: row[LessonTable.type])!)
+        return lesson(from: row)
+    }
+    
+    static func get(db: Connection, groupID: String) throws -> [LessonInfo] {
+        var result: [LessonInfo] = []
+        for row in try db.prepare(LessonTable.table
+            .filter(LessonTable.groupIdentifier == groupID)
+            .order(LessonTable.sequence)) {
+            result.append(lesson(from: row))
+        }
+        return result
+    }
+    
+    private static func lesson(from row: Row) -> LessonInfo {
+        LessonInfo(id: row[LessonTable.identifier],
+                   groupID: row[LessonTable.groupIdentifier],
+                   sequence: row[LessonTable.sequence],
+                   updateDate: row[LessonTable.updateDate],
+                   name: row[LessonTable.lessonName],
+                   subname: row[LessonTable.lessonSubname],
+                   type: LessonType(rawValue: row[LessonTable.type])!)
     }
 }
