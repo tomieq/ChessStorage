@@ -43,7 +43,7 @@ extension LessonTable {
             try db.run(LessonTable.table.filter(LessonTable.identifier == identifier).update(
                 LessonTable.sequence <- lesson.sequence,
                 LessonTable.updateDate <- lesson.updateDate,
-                LessonTable.lessonSubname <- lesson.name,
+                LessonTable.lessonName <- lesson.name,
                 LessonTable.lessonSubname <- lesson.subname,
                 LessonTable.type <- lesson.type.rawValue
             ))
@@ -52,7 +52,7 @@ extension LessonTable {
                 LessonTable.identifier <- lesson.id ?? UUID().uuidString,
                 LessonTable.sequence <- lesson.sequence,
                 LessonTable.updateDate <- lesson.updateDate,
-                LessonTable.lessonSubname <- lesson.name,
+                LessonTable.lessonName <- lesson.name,
                 LessonTable.lessonSubname <- lesson.subname,
                 LessonTable.type <- lesson.type.rawValue
             ))
