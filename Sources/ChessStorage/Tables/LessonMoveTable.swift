@@ -9,7 +9,7 @@ import Foundation
 @preconcurrency import SQLite
 
 enum LessonMoveTable {
-    static let name = "lessons"
+    static let name = "moves"
     static let table = Table(Self.name)
     static let identifier = SQLite.Expression<String>("identifier")
     static let lessonIdentifier = SQLite.Expression<String>("lessonIdentifier")
