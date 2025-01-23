@@ -42,7 +42,6 @@ struct LessonTableTests {
     @Test func getLesson() async throws {
         let db = try Connection(.inMemory)
         try LessonTable.createTable(db: db)
-        try LessonTable.store(db: db, lesson: sampleLesson)
         let stored = try LessonTable.store(db: db, lesson: sampleLesson)
         let restored = try LessonTable.get(db: db, id: stored.id!)
         #expect(restored?.name == sampleLesson.name)

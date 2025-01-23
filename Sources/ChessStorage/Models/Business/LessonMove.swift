@@ -6,7 +6,7 @@
 //
 
 public struct LessonMove: Codable {
-    public let id: String
+    public let id: String?
     public let updateDate: Double
     public let moveNumber: Int // next move number within lesson
     public let userColor: PieceColor // user's color that moves
