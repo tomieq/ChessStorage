@@ -12,6 +12,7 @@ let package = Package(
             targets: ["ChessStorage"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/tomieq/SwiftExtensions", branch: "master"),
         .package(url: "https://github.com/stephencelis/SQLite.swift", .upToNextMajor(from: "0.15.3"))
     ],
     targets: [
@@ -20,6 +21,7 @@ let package = Package(
         .target(
             name: "ChessStorage",
             dependencies: [
+                .product(name: "SwiftExtensions", package: "SwiftExtensions"),
                 .product(name: "SQLite", package: "SQLite.swift")
             ]
         ),

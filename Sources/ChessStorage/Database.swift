@@ -15,6 +15,7 @@ public class Database {
         try? LessonGroupTable.createTable(db: db)
         try? LessonTable.createTable(db: db)
         try? LessonMoveTable.createTable(db: db)
+        try? LessonResultTable.createTable(db: db)
     }
     
     public var allGroups: [LessonGroup] {
