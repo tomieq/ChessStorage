@@ -43,4 +43,18 @@ public class Database {
     public func moves(lessonID: String) throws -> [LessonMove] {
         try LessonMoveTable.get(db: db, lessonID: lessonID)
     }
+    
+    public var allResults: [(lessonID: String, result: String)] {
+        get throws {
+            try LessonResultTable.getAll(db: db)
+        }
+    }
+    
+    public func store(result: String, lessonID: String) throws {
+        try LessonResultTable.store(db: db, lessonID: lessonID, result: result)
+    }
+    
+    public func removeResults() throws {
+        try LessonResultTable.removeAll(db: db)
+    }
 }
