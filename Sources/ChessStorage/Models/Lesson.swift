@@ -14,9 +14,11 @@ public struct Lesson: Codable {
     public let name: String
     public let subname: String
     public let type: LessonType
+    public let rating: Int?
     
     public init(id: String? = nil, groupID: String, sequence: Int,
-                updateDate: Double, name: String, subname: String, type: LessonType) {
+                updateDate: Double, name: String, subname: String, type: LessonType,
+                rating: Int? = nil) {
         self.id = id ?? UUID().uuidString
         self.groupID = groupID
         self.sequence = sequence
@@ -24,5 +26,6 @@ public struct Lesson: Codable {
         self.name = name
         self.subname = subname
         self.type = type
+        self.rating = rating
     }
 }

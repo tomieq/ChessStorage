@@ -17,6 +17,7 @@ enum LessonTable {
     static let lessonName = SQLite.Expression<String>("name")
     static let lessonSubname = SQLite.Expression<String>("subname")
     static let type = SQLite.Expression<String>("type")
+    static let rating = SQLite.Expression<Int?>("rating")
 }
 
 extension LessonTable {
@@ -29,11 +30,13 @@ extension LessonTable {
             t.column(LessonTable.lessonName)
             t.column(LessonTable.lessonSubname)
             t.column(LessonTable.type)
+            t.column(LessonTable.rating)
         })
         try db.run(LessonTable.table.createIndex(LessonTable.identifier, ifNotExists: true))
         try db.run(LessonTable.table.createIndex(LessonTable.groupIdentifier, ifNotExists: true))
         try db.run(LessonTable.table.createIndex(LessonTable.sequence, ifNotExists: true))
         try db.run(LessonTable.table.createIndex(LessonTable.updateDate, ifNotExists: true))
+        try db.run(LessonTable.table.createIndex(LessonTable.rating, ifNotExists: true))
     }
     
     static func count(db: Connection) throws -> Int {
@@ -49,7 +52,8 @@ extension LessonTable {
                     LessonTable.updateDate <- lesson.updateDate,
                     LessonTable.lessonName <- lesson.name,
                     LessonTable.lessonSubname <- lesson.subname,
-                    LessonTable.type <- lesson.type.rawValue
+                    LessonTable.type <- lesson.type.rawValue,
+                    LessonTable.rating <- lesson.rating
                 ))
         } else {
             try db.run(LessonTable.table.insert(
@@ -59,7 +63,8 @@ extension LessonTable {
                 LessonTable.updateDate <- lesson.updateDate,
                 LessonTable.lessonName <- lesson.name,
                 LessonTable.lessonSubname <- lesson.subname,
-                LessonTable.type <- lesson.type.rawValue
+                LessonTable.type <- lesson.type.rawValue,
+                LessonTable.rating <- lesson.rating
             ))
         }
     }
@@ -83,11 +88,12 @@ extension LessonTable {
     
     private static func lesson(from row: Row) -> Lesson {
         Lesson(id: row[LessonTable.identifier],
-                   groupID: row[LessonTable.groupIdentifier],
-                   sequence: row[LessonTable.sequence],
-                   updateDate: row[LessonTable.updateDate],
-                   name: row[LessonTable.lessonName],
-                   subname: row[LessonTable.lessonSubname],
-                   type: LessonType(rawValue: row[LessonTable.type])!)
+               groupID: row[LessonTable.groupIdentifier],
+               sequence: row[LessonTable.sequence],
+               updateDate: row[LessonTable.updateDate],
+               name: row[LessonTable.lessonName],
+               subname: row[LessonTable.lessonSubname],
+               type: LessonType(rawValue: row[LessonTable.type])!,
+               rating: row[LessonTable.rating])
     }
 }

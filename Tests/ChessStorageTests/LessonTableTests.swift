@@ -18,7 +18,8 @@ struct LessonTableTests {
                updateDate: 5,
                name: UUID().uuidString,
                subname: UUID().uuidString,
-               type: .opening)
+               type: .opening,
+               rating: nil)
     }
 
     @Test func emptyDatabase() async throws {
