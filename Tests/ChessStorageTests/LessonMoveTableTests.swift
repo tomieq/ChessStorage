@@ -17,16 +17,12 @@ struct LessonMoveTableTests {
                        updateDate: 876,
                        moveNumber: 3,
                        userColor: .white,
-                       fenSimpleBeforeComputerMove: UUID().uuidString,
                        fenBeforeComputerMove: UUID().uuidString,
                        computerMove: UUID().uuidString,
-                       fenSimpleBeforeUserMove: UUID().uuidString,
                        fenBeforeUserMove: UUID().uuidString,
                        commentBeforeUserMove: UUID().uuidString,
                        commentAfterUserMove: UUID().uuidString,
                        correctUserMove: UUID().uuidString,
-                       fenSimpleAfterUserMove: UUID().uuidString,
-                       fenAfterUserMove: UUID().uuidString,
                        commentOnIncorrectMove: UUID().uuidString)
     }
 
@@ -53,16 +49,12 @@ struct LessonMoveTableTests {
         #expect(restored?.updateDate == move.updateDate)
         #expect(restored?.moveNumber == move.moveNumber)
         #expect(restored?.userColor == move.userColor)
-        #expect(restored?.fenSimpleBeforeComputerMove == move.fenSimpleBeforeComputerMove)
         #expect(restored?.fenBeforeComputerMove == move.fenBeforeComputerMove)
         #expect(restored?.computerMove == move.computerMove)
-        #expect(restored?.fenSimpleBeforeUserMove == move.fenSimpleBeforeUserMove)
         #expect(restored?.fenBeforeUserMove == move.fenBeforeUserMove)
         #expect(restored?.commentBeforeUserMove == move.commentBeforeUserMove)
         #expect(restored?.commentAfterUserMove == move.commentAfterUserMove)
         #expect(restored?.correctUserMove == move.correctUserMove)
-        #expect(restored?.fenSimpleAfterUserMove == move.fenSimpleAfterUserMove)
-        #expect(restored?.fenAfterUserMove == move.fenAfterUserMove)
         #expect(restored?.commentOnIncorrectMove == move.commentOnIncorrectMove)
         #expect(restored?.id == move.id)
     }
@@ -79,16 +71,12 @@ struct LessonMoveTableTests {
         #expect(restored?.updateDate == move.updateDate)
         #expect(restored?.moveNumber == move.moveNumber)
         #expect(restored?.userColor == move.userColor)
-        #expect(restored?.fenSimpleBeforeComputerMove == move.fenSimpleBeforeComputerMove)
         #expect(restored?.fenBeforeComputerMove == move.fenBeforeComputerMove)
         #expect(restored?.computerMove == move.computerMove)
-        #expect(restored?.fenSimpleBeforeUserMove == move.fenSimpleBeforeUserMove)
         #expect(restored?.fenBeforeUserMove == move.fenBeforeUserMove)
         #expect(restored?.commentBeforeUserMove == move.commentBeforeUserMove)
         #expect(restored?.commentAfterUserMove == move.commentAfterUserMove)
         #expect(restored?.correctUserMove == move.correctUserMove)
-        #expect(restored?.fenSimpleAfterUserMove == move.fenSimpleAfterUserMove)
-        #expect(restored?.fenAfterUserMove == move.fenAfterUserMove)
         #expect(restored?.commentOnIncorrectMove == move.commentOnIncorrectMove)
         #expect(restored?.id == move.id)
     }
